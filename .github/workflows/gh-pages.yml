@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build web
-        run: npx ionic build --prod -- --base-href /test_github_action_delete/
+        run: npx ionic build --prod -- --base-href /test_github_action_delete/home/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
