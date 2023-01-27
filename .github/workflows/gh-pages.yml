@@ -24,5 +24,14 @@ jobs:
       - name: Build web
         run: npx ionic build --prod -- --base-href /test_github_action_delete/
 
+      - name: Copy and Rename
+        run: cp www/index.html www/newIndex.html
+        run: mv www/newIndex.html www/404.html
+      # - name: Deploy
+      #   run: npx angular-cli-ghpages --dir=www
+
       - name: Deploy
-        run: npx angular-cli-ghpages --dir=www
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./www
