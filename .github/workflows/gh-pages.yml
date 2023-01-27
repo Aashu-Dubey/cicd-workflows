@@ -24,8 +24,10 @@ jobs:
       - name: Build web
         run: npx ionic build --prod -- --base-href /test_github_action_delete/
 
-      - name: Copy and Rename
+      - name: Copy index.html
         run: cp www/index.html www/newIndex.html
+
+      - name: Rename to 404.html
         run: mv www/newIndex.html www/404.html
       # - name: Deploy
       #   run: npx angular-cli-ghpages --dir=www
