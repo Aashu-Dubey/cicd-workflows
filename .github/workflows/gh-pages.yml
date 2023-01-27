@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build web
-        run: ionic build --prod
+        run: npx ionic build --prod
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
