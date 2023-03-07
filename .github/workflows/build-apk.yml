@@ -13,30 +13,31 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
 
-    - uses: actions/checkout@v3
-    # Setup Java environment in order to build the Android app.
-    - uses: actions/setup-java@v2
-      with:
-        distribution: 'zulu'
-        java-version: '11'
+    steps:
+      - uses: actions/checkout@v3
+      # Setup Java environment in order to build the Android app.
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
 
-    # Setup the flutter environment.
-    - uses: subosito/flutter-action@v2
+      # Setup the flutter environment.
+      - uses: subosito/flutter-action@v2
 
-    # Get flutter dependencies.
-    - run: flutter pub get
+      # Get flutter dependencies.
+      - run: flutter pub get
 
-    # Statically analyze the Dart code for any errors.
-    # - run: flutter analyze .
+      # Statically analyze the Dart code for any errors.
+      # - run: flutter analyze .
 
-    # Run tests
-    # - run: flutter test
+      # Run tests
+      # - run: flutter test
 
-    # Build the Android apk.
-    - run: flutter build apk
+      # Build the Android apk.
+      - run: flutter build apk
 
-    # Upload generated apk to the artifacts.
-    - uses: actions/upload-artifact@v3
-      with:
-        name: flutter-samples-release
-        path: build/app/outputs/flutter-apk/app-release.apk
+      # Upload generated apk to the artifacts.
+      - uses: actions/upload-artifact@v3
+        with:
+          name: flutter-samples-release
+          path: build/app/outputs/flutter-apk/app-release.apk
