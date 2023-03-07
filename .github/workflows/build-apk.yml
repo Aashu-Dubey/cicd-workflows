@@ -22,6 +22,9 @@ jobs:
         with:
           node-version: '16'
 
+      - name: Install Ionic
+        run: npm install -g @ionic/cli
+
       - name: Install packages
         run: npm install
 
@@ -33,13 +36,19 @@ jobs:
           java-version: '11'
 
       - name: ionic capacitor sync for Android
-        run: npx ionic cap sync
+        run: ionic cap sync
+
+      - name: Build Ionic App
+        run: ionic build
+
+      - name: Copy Android
+        run: ionic capacitor copy android
 
       # - name: ionic capacitor for Android
-      #   run: npx ionic cap copy android
+      #   run: ionic cap copy android
 
       - name: ionic capacitor build for Android
-        run: npx ionic cap build android --prod --no-open
+        run: ionic cap build android --prod --no-open
 
       # Build the Android apk.
       - name: Build Android release APK
