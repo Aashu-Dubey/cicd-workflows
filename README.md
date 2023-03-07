@@ -1,7 +1,6 @@
 # test_github_actions
 
 A new Flutter project.
-(testing workflow .md file ignore)
 
 ## Getting Started
 
