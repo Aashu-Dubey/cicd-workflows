@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+[Flutter Android APK artifact](https://github.com/Aashu-Dubey/test_github_action_delete/actions/workflows/build-apk.yml?query=is%3Asuccess)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

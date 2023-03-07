@@ -1,4 +1,4 @@
-name: Build and Android APK
+name: Build an Android APK
 
 on:
   push:
@@ -39,5 +39,5 @@ jobs:
       # Upload generated apk to the artifacts.
       - uses: actions/upload-artifact@v3
         with:
-          name: flutter-samples-release
+          name: flutter-actions-test
           path: build/app/outputs/flutter-apk/app-release.apk
