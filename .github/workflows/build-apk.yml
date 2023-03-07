@@ -35,25 +35,25 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: ionic capacitor sync for Android
-        run: ionic cap sync
+      # - name: ionic capacitor sync for Android
+      #   run: ionic capacitor sync
 
-      - name: Build Ionic App
-        run: ionic build
+      # - name: Copy Android
+      #   run: ionic capacitor copy android
 
-      - name: Copy Android
-        run: ionic capacitor copy android
+      # - name: Build Ionic App
+      #   run: ionic build
 
       # - name: ionic capacitor for Android
-      #   run: ionic cap copy android
+      #   run: ionic capacitor copy android
 
       - name: ionic capacitor build for Android
-        run: ionic cap build android --prod --no-open
+        run: ionic capacitor build android --prod --no-open
 
       # Build the Android apk.
       - name: Build Android release APK
         working-directory: android
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleDebug
 
       # Upload generated apk to the artifacts.
       - name: Save release bundle as artifact
