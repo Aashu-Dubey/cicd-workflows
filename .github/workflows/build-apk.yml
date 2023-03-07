@@ -35,8 +35,8 @@ jobs:
       - name: ionic capacitor for Android
         run: npx ionic capacitor copy android
 
-      - name: ionic capacitor update for Android
-        run: npx ionic capacitor update android
+      - name: ionic capacitor sync for Android
+        run: npx ionic capacitor sync android
 
       - name: ionic capacitor build for Android
         run: npx ionic capacitor build android --prod --no-open
