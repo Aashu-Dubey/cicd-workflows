@@ -32,10 +32,13 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: ionic sync for Android
-        run: npx ionic capacitor copy android --prod
+      - name: ionic capacitor for Android
+        run: npx ionic capacitor copy android
 
-      - name: ionic build for Android
+      - name: ionic capacitor update for Android
+        run: npx ionic capacitor update android
+
+      - name: ionic capacitor build for Android
         run: npx ionic capacitor build android --prod --no-open
 
       # Build the Android apk.
