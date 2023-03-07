@@ -32,8 +32,8 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: capacitor sync for Android
-        run: npx cap sync
+      - name: ionic capacitor sync for Android
+        run: npx ionic cap sync
 
       # - name: ionic capacitor for Android
       #   run: npx ionic cap copy android
