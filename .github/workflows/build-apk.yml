@@ -33,17 +33,18 @@ jobs:
           java-version: '11'
 
       - name: ionic sync for Android
-        run: npx ionic capacitor sync android --prod
+        run: npx ionic capacitor copy android --prod
 
       - name: ionic build for Android
         run: npx ionic capacitor build android --prod --no-open
 
       # Build the Android apk.
       - name: Build Android release APK
-        run: cd android && ./gradlew assembleRelease && cd ..
+        working-directory: android
+        run: ./gradlew assembleRelease
 
       # Upload generated apk to the artifacts.
-      - name: Upload Android release APK
+      - name: Save release bundle as artifact
         uses: actions/upload-artifact@v3
         with:
           name: ionic-actions-test
