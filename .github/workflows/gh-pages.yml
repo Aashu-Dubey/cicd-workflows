@@ -2,8 +2,12 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    paths-ignore:
-      - '**/*.md'
+    paths:
+      - '*'
+      - '.github/workflows/gh-pages.yml'
+      - 'lib/**'
+      - 'web/**'
+      - '!**/*.md'
     branches:
       - main
 
@@ -16,9 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter environment
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
 
-      - name: Build
+      - name: Build Web
         run: flutter build web --base-href /test_github_action_delete/
 
       - name: Deploy
