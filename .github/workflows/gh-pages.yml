@@ -25,6 +25,8 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
+          ## only required if project is not in the root
+          # cache-dependency-path: subdir/package-lock.json
 
       - name: Install packages
         run: npm install
