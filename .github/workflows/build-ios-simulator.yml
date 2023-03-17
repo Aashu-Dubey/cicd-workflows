@@ -42,8 +42,8 @@ jobs:
           -configuration Release \
           -derivedDataPath "$(pwd)/build"
 
-      - name: Save apk file as artifact
+      - name: Save build file as artifact
         uses: actions/upload-artifact@v3
         with:
           name: rn-ios-simulator-build
-          path: $(pwd)/build/Build/Products/Release-iphonesimulator/rn_test_github_actions.app
+          path: $(pwd)/ios/build/Build/Products/Release-iphonesimulator/rn_test_github_actions.app
