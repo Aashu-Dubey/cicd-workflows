@@ -57,7 +57,7 @@ jobs:
             ${{ runner.os }}-ios-derived-data-
 
       - name: Run app on iOS
-        run: npx react-native run-ios
+        run: npx react-native run-ios --simulator 'iPhone 14 Pro Max'
 
       - name: Install xcpretty
         run: gem install xcpretty
