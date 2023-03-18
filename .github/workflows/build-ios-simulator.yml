@@ -56,8 +56,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ios-derived-data-
 
-      - name: Run app on iOS
-        run: npx react-native run-ios --simulator 'iPhone 14 Pro Max'
+      # - name: Run app on iOS
+      #   run: npx react-native run-ios --simulator 'iPhone 14 Pro Max' --configuration Release
 
       - name: Install xcpretty
         run: gem install xcpretty
@@ -70,6 +70,7 @@ jobs:
           CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
           -scheme rn_test_github_actions \
           -workspace rn_test_github_actions.xcworkspace \
+          -destination 'generic/platform=iOS Simulator' \
           -sdk iphonesimulator \
           -configuration Release \
           -derivedDataPath build | xcpretty
