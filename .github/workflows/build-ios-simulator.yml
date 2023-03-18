@@ -30,7 +30,12 @@ jobs:
       - name: Install node_modules
         run: yarn install --frozen-lockfile
 
-      - name: Cache Pods
+      # improve iOS build compilation time
+      - name: Restore buildcache
+        uses: mikehardy/buildcache-action@v2
+        continue-on-error: true
+
+      - name: Restore Pods cache
         uses: actions/cache@v3
         with:
           path: |
@@ -57,7 +62,9 @@ jobs:
       - name: Run simulator build command
         working-directory: ios
         run: |
-          set -o pipefail && xcodebuild \
+          set -o pipefail
+          xcodebuild \
+          CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
           -scheme rn_test_github_actions \
           -workspace rn_test_github_actions.xcworkspace \
           -sdk iphonesimulator \
@@ -71,4 +78,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: rn-ios-simulator-build
-          path: ./output
+          path: ios/build/Build/Products/Release-iphonesimulator/output
