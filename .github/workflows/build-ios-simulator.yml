@@ -55,15 +55,15 @@ jobs:
 
       - name: Run simulator build command
         working-directory: ios
-        run: |
-          xcodebuild -scheme rn_test_github_actions \
+        run: "set -o pipefail && xcodebuild \
+          -scheme rn_test_github_actions \
           -workspace rn_test_github_actions.xcworkspace \
           -sdk iphonesimulator \
           -configuration Release \
-          -derivedDataPath "$(pwd)/build" | xcpretty
+          -derivedDataPath build | xcpretty"
 
       - name: Save build file as artifact
         uses: actions/upload-artifact@v3
         with:
           name: rn-ios-simulator-build
-          path: $(pwd)/ios/build/Build/Products/Release-iphonesimulator/rn_test_github_actions.app
+          path: ios/build/Build/Products/Release-iphonesimulator/rn_test_github_actions.app
