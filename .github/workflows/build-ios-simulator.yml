@@ -57,12 +57,12 @@ jobs:
       - name: Run simulator build command
         working-directory: ios
         run: |
-          "set -o pipefail && xcodebuild \
+          set -o pipefail && xcodebuild \
           -scheme rn_test_github_actions \
           -workspace rn_test_github_actions.xcworkspace \
           -sdk iphonesimulator \
           -configuration Release \
-          -derivedDataPath build | xcpretty"
+          -derivedDataPath build | xcpretty
           cd build/Build/Products/Release-iphonesimulator
           mkdir output
           zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
