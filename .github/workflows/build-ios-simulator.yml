@@ -48,22 +48,27 @@ jobs:
         with:
           path: ~/Library/Developer/Xcode/DerivedData
           key: ${{ runner.os }}-ios-derived-data-${{ hashFiles('ios/Podfile.lock') }}
-          restore-keys: ${{ runner.os }}-ios-derived-data-
+          restore-keys: |
+            ${{ runner.os }}-ios-derived-data-
 
       - name: Install xcpretty
         run: gem install xcpretty
 
       - name: Run simulator build command
         working-directory: ios
-        run: "set -o pipefail && xcodebuild \
+        run: |
+          "set -o pipefail && xcodebuild \
           -scheme rn_test_github_actions \
           -workspace rn_test_github_actions.xcworkspace \
           -sdk iphonesimulator \
           -configuration Release \
           -derivedDataPath build | xcpretty"
+          cd build/Build/Products/Release-iphonesimulator
+          mkdir output
+          zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
 
       - name: Save build file as artifact
         uses: actions/upload-artifact@v3
         with:
           name: rn-ios-simulator-build
-          path: ios/build/Build/Products/Release-iphonesimulator/rn_test_github_actions.app
+          path: ./output
