@@ -56,6 +56,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ios-derived-data-
 
+      - name: Run app on iOS
+        run: npx react-native run-ios
+
       - name: Install xcpretty
         run: gem install xcpretty
 
