@@ -70,6 +70,10 @@ jobs:
           -sdk iphonesimulator \
           -configuration Release \
           -derivedDataPath build | xcpretty
+
+      - name: Store build .app file as zip
+        working-directory: ios
+        run: |
           cd build/Build/Products/Release-iphonesimulator
           mkdir output
           zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
