@@ -78,7 +78,7 @@ jobs:
         working-directory: ios
         run: |
           cd ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator
-          mkdir output
+          mkdir -p output
           zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
 
       - name: Save build file as artifact
