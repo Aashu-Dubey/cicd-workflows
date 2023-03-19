@@ -48,36 +48,49 @@ jobs:
       - name: Install Pod files
         run: npx pod-install ios
 
-      - name: Restore build artifacts from cache
-        uses: actions/cache@v3
-        with:
-          path: ~/Library/Developer/Xcode/DerivedData
-          key: ${{ runner.os }}-ios-derived-data-${{ hashFiles('ios/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-ios-derived-data-
+      # - name: Restore build artifacts from cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/Library/Developer/Xcode/DerivedData
+      #     key: ${{ runner.os }}-ios-derived-data-${{ hashFiles('ios/Podfile.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-ios-derived-data-
 
-      - name: Run app on iOS
-        run: npx react-native run-ios --simulator 'iPhone 14 Pro Max' --configuration Release
+      # - name: Run app on iOS
+      #   run: npx react-native run-ios --simulator 'iPhone 14 Pro Max' --configuration Release
 
-      # - name: Install xcpretty
-      #   run: gem install xcpretty
-
-      # - name: Run simulator build command
+      # - name: Store build .app file as zip
       #   working-directory: ios
       #   run: |
-      #     set -o pipefail
-      #     xcodebuild \
-      #     CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
-      #     -scheme rn_test_github_actions \
-      #     -workspace rn_test_github_actions.xcworkspace \
-      #     -sdk iphonesimulator \
-      #     -configuration Release \
-      #     -derivedDataPath build | xcpretty
+      #     cd ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator
+      #     mkdir -p output
+      #     zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
+
+      # - name: Save build file as artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: rn-ios-simulator-build
+      #     path: ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator/output
+
+      - name: Install xcpretty
+        run: gem install xcpretty
+
+      - name: Run simulator build command
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+          CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
+          -scheme rn_test_github_actions \
+          -workspace rn_test_github_actions.xcworkspace \
+          -sdk iphonesimulator \
+          -configuration Release \
+          -derivedDataPath build | xcpretty
 
       - name: Store build .app file as zip
         working-directory: ios
         run: |
-          cd ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator
+          cd build/Build/Products/Release-iphonesimulator
           mkdir -p output
           zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
 
@@ -85,4 +98,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: rn-ios-simulator-build
-          path: ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator/output
+          path: ios/build/Build/Products/Release-iphonesimulator/output
