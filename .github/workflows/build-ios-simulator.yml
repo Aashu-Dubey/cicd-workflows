@@ -56,29 +56,28 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ios-derived-data-
 
-      # - name: Run app on iOS
-      #   run: npx react-native run-ios --simulator 'iPhone 14 Pro Max' --configuration Release
+      - name: Run app on iOS
+        run: npx react-native run-ios --simulator 'iPhone 14 Pro Max' --configuration Release
 
-      - name: Install xcpretty
-        run: gem install xcpretty
+      # - name: Install xcpretty
+      #   run: gem install xcpretty
 
-      - name: Run simulator build command
-        working-directory: ios
-        run: |
-          set -o pipefail
-          xcodebuild \
-          CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
-          -scheme rn_test_github_actions \
-          -workspace rn_test_github_actions.xcworkspace \
-          -destination 'generic/platform=iOS Simulator' \
-          -sdk iphonesimulator \
-          -configuration Release \
-          -derivedDataPath build | xcpretty
+      # - name: Run simulator build command
+      #   working-directory: ios
+      #   run: |
+      #     set -o pipefail
+      #     xcodebuild \
+      #     CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
+      #     -scheme rn_test_github_actions \
+      #     -workspace rn_test_github_actions.xcworkspace \
+      #     -sdk iphonesimulator \
+      #     -configuration Release \
+      #     -derivedDataPath build | xcpretty
 
       - name: Store build .app file as zip
         working-directory: ios
         run: |
-          cd build/Build/Products/Release-iphonesimulator
+          cd ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator
           mkdir output
           zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
 
@@ -86,4 +85,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: rn-ios-simulator-build
-          path: ios/build/Build/Products/Release-iphonesimulator/output
+          path: ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator/output
