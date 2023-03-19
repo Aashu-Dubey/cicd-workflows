@@ -83,7 +83,6 @@ jobs:
 
       - name: Save build file as artifact
         uses: actions/upload-artifact@v3
-        working-directory: ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator
         with:
           name: rn-ios-simulator-build
-          path: output
+          path: ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator/output
