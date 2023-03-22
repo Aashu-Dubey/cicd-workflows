@@ -21,6 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # improve iOS build compilation time
+      - name: Restore buildcache
+        uses: mikehardy/buildcache-action@v2
+        continue-on-error: true
+
       # Optional security step: Validate whether gradle-wrapper.jar is valid or malicious
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
@@ -49,11 +54,6 @@ jobs:
       # Here '--frozen-lockfile' will only use commited 'yarn.lock', and will throw error if some update is needed
       - name: Install node_modules
         run: yarn install --frozen-lockfile
-
-      # improve iOS build compilation time
-      - name: Restore buildcache
-        uses: mikehardy/buildcache-action@v2
-        continue-on-error: true
 
       # In some cases, Gradle is not executable by default, so we do this before the build process
       - name: Make gradlew executable
