@@ -50,6 +50,11 @@ jobs:
       - name: Install node_modules
         run: yarn install --frozen-lockfile
 
+      # improve iOS build compilation time
+      - name: Restore buildcache
+        uses: mikehardy/buildcache-action@v2
+        continue-on-error: true
+
       # In some cases, Gradle is not executable by default, so we do this before the build process
       - name: Make gradlew executable
         working-directory: android
