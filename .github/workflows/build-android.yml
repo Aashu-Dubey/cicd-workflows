@@ -41,6 +41,10 @@ jobs:
       # Setup gradle using official gradle action
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+        with:
+          # Optional: Only write to the cache for builds on the 'main' and 'react-native' branches. (Default is 'main' only.)
+          # Builds on other branches will only read existing entries from the cache.
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/react-native' }}
 
       # Here '--frozen-lockfile' will only use commited 'yarn.lock', and will throw error if some update is needed
       - name: Install node_modules
