@@ -21,6 +21,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # Optional security step: Validate whether gradle-wrapper.jar is valid or malicious
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
       # Setup Web environment to install packages.
       - name: Setup Web environment
         uses: actions/setup-node@v3
@@ -33,7 +37,10 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
-          cache: 'gradle'
+
+      # Setup gradle using official gradle action
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
       # Here '--frozen-lockfile' will only use commited 'yarn.lock', and will throw error if some update is needed
       - name: Install node_modules
@@ -46,7 +53,7 @@ jobs:
 
       - name: Build Android release APK
         working-directory: android
-        run: ./gradlew assembleRelease --no-daemon
+        run: ./gradlew assembleRelease
 
       - name: Save apk file as artifact
         uses: actions/upload-artifact@v3
