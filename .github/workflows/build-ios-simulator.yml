@@ -71,7 +71,7 @@ jobs:
           cd build/Build/Products/Release-iphonesimulator
           mv App.app ionic_github_action_ios.app
           mkdir -p output
-          zip -r -y -o output/ionic_github_action_ios.zip ionic-github-actions-ios.app
+          zip -r -y -o output/ionic_github_action_ios.zip ionic_github_action_ios.app
 
       - name: Save build file as artifact
         uses: actions/upload-artifact@v3
