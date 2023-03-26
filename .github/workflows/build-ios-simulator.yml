@@ -63,12 +63,12 @@ jobs:
           -workspace App.xcworkspace \
           -sdk iphonesimulator \
           -configuration Release \
-          -derivedDataPath $RUNNER_TEMP/build | xcpretty
+          -derivedDataPath build | xcpretty
 
       - name: Store build .app file as zip
         working-directory: ios/App
         run: |
-          cd $RUNNER_TEMP/build/Build/Products/Release-iphonesimulator
+          cd build/Build/Products/Release-iphonesimulator
           mv App.app ionic_github_action_ios.app
           mkdir -p output
           zip -r -y -o output/ionic_github_action_ios.zip ionic_github_action_ios.app
@@ -77,4 +77,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ionic-ios-simulator-build
-          path: $RUNNER_TEMP/build/Build/Products/Release-iphonesimulator/output
+          path: ios/App/build/Build/Products/Release-iphonesimulator/output
