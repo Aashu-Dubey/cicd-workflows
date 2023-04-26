@@ -1,0 +1,70 @@
+# This workflow create an Android release APK (unsigned) for react-native application
+
+name: react-native - Android APK
+
+on:
+  push:
+    paths:
+      - '*'
+      - '.github/workflows/build-android.yml'
+      - 'android/**'
+      - 'src/**'
+      - '!**/*.md'
+    branches:
+      - main
+      - react-native
+
+jobs:
+  rn-build-android:
+    # permissions:
+    #   contents: write
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Optional security step: Validate whether gradle-wrapper.jar is valid or malicious
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      # Setup Web environment to install packages.
+      - name: Setup Web environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn' # or 'npm'
+
+      # Setup Java environment in order to build the Android app.
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      # Setup gradle using official gradle action
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          generate-job-summary: false
+          # Optional: Only write to the cache for builds on the 'main' and 'react-native' branches. (Default is 'main' only.)
+          # Builds on other branches will only read existing entries from the cache.
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/react-native' }}
+
+      # Here '--frozen-lockfile' will only use commited 'yarn.lock', and will throw error if some update is needed
+      - name: Install node_modules
+        run: yarn install --frozen-lockfile
+
+      # In some cases, Gradle is not executable by default, so we do this before the build process
+      - name: Make gradlew executable
+        working-directory: android
+        run: chmod +x ./gradlew
+
+      - name: Build Android release APK
+        working-directory: android
+        run: ./gradlew assembleRelease
+
+      - name: Save apk file as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: rn-build-android
+          path: android/app/build/outputs/apk/release/app-release.apk

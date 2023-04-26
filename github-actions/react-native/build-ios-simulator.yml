@@ -1,0 +1,110 @@
+# This workflow create an iOS simulator release build for react-native application
+# To install the app, download and unzip the artifact and then drag and drop the .app file into the iOS simulator
+# 
+# There are two solutions:
+# 1. Through the 'xcodebuild' command
+# 2. By running the app on simulator and then upload the app created in 'DerivedData' folder as an artifact
+
+name: react-native - iOS Simulator build
+
+on:
+  push:
+    paths:
+      - '*'
+      - '.github/workflows/build-ios-simulator.yml'
+      - 'ios/**'
+      - 'src/**'
+      - '!**/*.md'
+    branches:
+      - main
+      - react-native
+
+jobs:
+  rn-build-ios-simulator:
+    name: Create an iOS Simulator build
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Setup Web environment to install packages.
+      - name: Setup Web environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn' # or 'npm'
+
+      # Here '--frozen-lockfile' will only use commited 'yarn.lock', and will throw error if some update is needed
+      - name: Install node_modules
+        run: yarn install --frozen-lockfile
+
+      # improve iOS build compilation time
+      - name: Restore buildcache
+        uses: mikehardy/buildcache-action@v2
+        continue-on-error: true
+
+      - name: Restore Pods cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ios/Pods
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: ${{ runner.os }}-pods-
+
+      - name: Install Pod files
+        run: npx pod-install ios
+
+      # Another solution creating build by running on simulator instead of using command
+      # - name: Restore build artifacts from cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/Library/Developer/Xcode/DerivedData
+      #     key: ${{ runner.os }}-ios-derived-data-${{ hashFiles('ios/Podfile.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-ios-derived-data-
+
+      # - name: Run app on iOS
+      #   run: npx react-native run-ios --simulator 'iPhone 14 Pro Max' --configuration Release
+
+      # - name: Store build .app file as zip
+      #   working-directory: ios
+      #   run: |
+      #     cd ~/Library/Developer/Xcode/DerivedData/app_scheme-*/Build/Products/Release-iphonesimulator
+      #     mkdir -p output
+      #     zip -r -y -o output/app_scheme.zip app_scheme.app
+
+      # - name: Save build file as artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: rn-build-ios-simulator
+      #     path: ~/Library/Developer/Xcode/DerivedData/app_scheme-*/Build/Products/Release-iphonesimulator/output
+
+      - name: Install xcpretty
+        run: gem install xcpretty
+
+      - name: Run simulator build command
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+          CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
+          -scheme app_scheme \
+          -workspace app_name.xcworkspace \
+          -sdk iphonesimulator \
+          -configuration Release \
+          -derivedDataPath build | xcpretty
+
+      - name: Store build .app file as zip
+        working-directory: ios
+        run: |
+          cd build/Build/Products/Release-iphonesimulator
+          mkdir -p output
+          zip -r -y -o output/app_scheme.zip app_scheme.app
+
+      - name: Save build file as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: rn-build-ios-simulator
+          path: ios/build/Build/Products/Release-iphonesimulator/output
