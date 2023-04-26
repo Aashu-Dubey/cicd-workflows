@@ -9,7 +9,7 @@ on:
       - 'android/**'
       - '!**/*.md'
     branches:
-      - main
+      - flutter
 
 jobs:
   build-apk:

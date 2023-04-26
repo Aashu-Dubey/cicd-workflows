@@ -9,7 +9,7 @@ on:
       - 'web/**'
       - '!**/*.md'
     branches:
-      - main
+      - flutter
 
 jobs:
   build-and-deploy:
