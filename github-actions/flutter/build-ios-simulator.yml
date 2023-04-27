@@ -1,0 +1,57 @@
+# This workflow create an iOS simulator build for flutter application
+# To install the app, download and unzip the artifact and then drag and drop the .app file into the iOS simulator
+
+name: flutter - iOS Simulator build
+
+on:
+  push:
+    paths:
+      - '*'
+      - '.github/workflows/build-ios-simulator.yml'
+      - 'lib/**'
+      - 'assets/**'
+      - 'ios/**'
+      - '!**/*.md'
+    branches:
+      - main
+      - flutter
+
+jobs:
+  flutter-build-ios-simulator:
+    name: Create an iOS Simulator build
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Setup the flutter environment.
+      - name: Setup Flutter environment
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+
+      - name: Restore Pods cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ios/Pods
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: ${{ runner.os }}-pods-
+
+      - name: Build iOS ipa
+        run: flutter build ios --simulator --no-codesign --obfuscate --split-debug-info --config-only
+
+      - name: Store build .app file as zip
+        run: |
+          cd build/ios/iphonesimulator
+          mv Runner.app app_scheme.app
+          mkdir -p output
+          zip -r -y -o output/app_scheme.zip app_scheme.app
+
+      - name: Save build file as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: flutter-build-ios-simulator
+          path: build/ios/iphonesimulator/output

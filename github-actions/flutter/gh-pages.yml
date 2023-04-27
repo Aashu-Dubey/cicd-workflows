@@ -1,0 +1,40 @@
+# This workflow build and publish a flutter web application to GitHub pages
+# Usual web url: user_name.github.io/repository_name
+
+name: flutter Web - GitHub Pages
+
+on:
+  push:
+    paths:
+      - '*'
+      - '.github/workflows/gh-pages.yml'
+      - 'lib/**'
+      - 'assets/**'
+      - 'web/**'
+      - '!**/*.md'
+    branches:
+      - main
+      - flutter
+
+jobs:
+  build-and-deploy:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Flutter environment
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+
+      - name: Build Web
+        run: flutter build web --base-href /repository_name/
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
