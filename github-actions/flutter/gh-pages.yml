@@ -1,4 +1,4 @@
-# This workflow build and publish a flutter web application to GitHub pages
+# This workflow build and publishes a flutter web application to GitHub pages
 # Usual web url: user_name.github.io/repository_name
 
 name: flutter Web - GitHub Pages
