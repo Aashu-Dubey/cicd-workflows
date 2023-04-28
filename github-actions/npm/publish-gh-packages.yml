@@ -1,0 +1,39 @@
+# This workflow build and publishes an npm package to GitHub Packages registry
+# the published package will then appear at 'https://github.com/gh_username?tab=packages'
+
+name: Publish Package - GitHub Packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish-gh-packages:
+    name: Publish package to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Setup .npmrc file to publish to GitHub Packages
+      - name: Setup Web environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'yarn' # or 'npm'
+
+      - name: Install packages
+        run: yarn # or 'npm ci'
+
+      - name: Build the plugin
+        run: yarn build # or 'npm run build'
+
+      - name: Publish Package
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
