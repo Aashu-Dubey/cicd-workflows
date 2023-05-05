@@ -1,0 +1,23 @@
+# This pipeline build an debug Android APK for Ionic & Cordova application
+#
+# Tech: Ionic with Angular using Cordova for mobile.
+# specification: node 14, angular 12, cordova (android v9.1.0, ios v6.2.0)
+
+image: beevelop/ionic:latest
+
+pipelines:
+  branches:
+    feat/ionic-pipelines:
+      - step:
+          name: Build Android APK
+          caches:
+            - node
+            - gradle
+          script:
+            - npm ci
+            - npm install -g cordova
+            - ionic cordova platform add android@9.1.0
+            - npm link webpack # to avoid cannot find module 'webpack' error
+            - ionic cordova build android --aot --configuration=development
+          artifacts:
+            - platforms/android/app/build/outputs/apk/debug/*.apk
