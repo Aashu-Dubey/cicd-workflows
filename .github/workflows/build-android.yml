@@ -27,6 +27,8 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
+          # only required if project is not in the root
+          # cache-dependency-path: folder_name/package-lock.json
 
       # Setup Java environment in order to build the Android app.
       - name: Setup Java 11

@@ -50,6 +50,30 @@ jobs:
       - name: Build the ionic project for iOS
         run: ionic capacitor build ios --prod --no-open
 
+      # - name: Restore build artifacts from cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/Library/Developer/Xcode/DerivedData
+      #     key: ${{ runner.os }}-ios-derived-data-${{ hashFiles('ios/Podfile.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-ios-derived-data-
+
+      # - name: Run app on iOS
+      #   run: npx react-native run-ios --simulator 'iPhone 14 Pro Max' --configuration Release
+
+      # - name: Store build .app file as zip
+      #   working-directory: ios
+      #   run: |
+      #     cd ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator
+      #     mkdir -p output
+      #     zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
+
+      # - name: Save build file as artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: rn-ios-simulator-build
+      #     path: ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator/output
+
       - name: Install xcpretty
         run: gem install xcpretty
 
