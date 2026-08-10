@@ -30,7 +30,7 @@ jobs:
           node-version: '24'
           cache: 'yarn'
 
-      - uses: hendrikmuhs/ccache-action@v1.2
+      - uses: hendrikmuhs/ccache-action@v1.2.23
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-ccache # makes a unique key w/related restore key internally
