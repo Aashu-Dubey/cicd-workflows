@@ -17,17 +17,17 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      # 'corepack enable' is needed for now till it's experimental, may remove the command once it becomes stable in later node releases
-      - name: Enable Corepack
-        run: corepack enable
+      # # 'corepack enable' is needed for now till it's experimental, may remove the command once it becomes stable in later node releases
+      # - name: Enable Corepack
+      #   run: corepack enable
 
       # Setup Web environment to install packages.
       - name: Setup Web environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'yarn'
 
       - uses: hendrikmuhs/ccache-action@v1.2
@@ -38,7 +38,7 @@ jobs:
           max-size: 1500M
 
       - name: Restore node_modules from cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock') }}
@@ -54,7 +54,7 @@ jobs:
       #   continue-on-error: true
 
       - name: Restore Pods cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ios/Pods
@@ -67,7 +67,7 @@ jobs:
         run: npx pod-install ios
 
       # - name: Restore build artifacts from cache
-      #   uses: actions/cache@v4
+      #   uses: actions/cache@v6
       #   with:
       #     path: ~/Library/Developer/Xcode/DerivedData
       #     key: ${{ runner.os }}-ios-derived-data-${{ hashFiles('ios/Podfile.lock') }}
@@ -85,13 +85,13 @@ jobs:
       #     zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
 
       # - name: Save build file as artifact
-      #   uses: actions/upload-artifact@v4
+      #   uses: actions/upload-artifact@v7
       #   with:
       #     name: rn-ios-simulator-build
       #     path: ~/Library/Developer/Xcode/DerivedData/rn_test_github_actions-*/Build/Products/Release-iphonesimulator/output
 
       - name: Restore build artifacts from cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ios/build
           key: ${{ runner.os }}-ios-derived-data-${{ hashFiles('ios/Podfile.lock') }}
@@ -128,7 +128,7 @@ jobs:
           zip -r -y -o output/rn_test_github_actions.zip rn_test_github_actions.app
 
       - name: Save build file as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: rn-ios-simulator-build
           path: ios/build/Build/Products/Release-iphonesimulator/output
