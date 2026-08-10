@@ -25,9 +25,9 @@ jobs:
       # - name: Validate Gradle Wrapper
       #   uses: gradle/actions/wrapper-validation@v3
 
-      # # 'corepack enable' is needed for now till it's experimental, may remove the command once it becomes stable in later node releases
-      # - name: Enable Corepack
-      #   run: corepack enable
+      # 'corepack enable' is needed for now till it's experimental, may remove the command once it becomes stable in later node releases
+      - name: Enable Corepack
+        run: corepack enable
 
       # Setup Web environment to install packages.
       - name: Setup Web environment
