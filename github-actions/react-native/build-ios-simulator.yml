@@ -15,6 +15,7 @@ on:
       - 'ios/**'
       - 'src/**'
       - '!**/*.md'
+      - '!android/**'
     branches:
       - main
       - react-native
@@ -25,7 +26,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # 'corepack enable' is needed for now till it's experimental, may remove the command once it becomes stable in later node releases
       - name: Enable Corepack
@@ -33,12 +34,12 @@ jobs:
 
       # Setup Web environment to install packages.
       - name: Setup Web environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'yarn' # or 'npm'
 
-      - uses: hendrikmuhs/ccache-action@v1.2
+      - uses: hendrikmuhs/ccache-action@v1.2.23
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-ccache # makes a unique key w/related restore key internally
@@ -46,7 +47,7 @@ jobs:
           max-size: 1500M
 
       - name: Restore node_modules from cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock') }}
@@ -57,7 +58,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Restore Pods cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ios/Pods
@@ -67,7 +68,7 @@ jobs:
           restore-keys: ${{ runner.os }}-pods-
 
       - name: Restore build artifacts from cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ios/build
           key: ${{ runner.os }}-ios-derived-data-${{ hashFiles('ios/Podfile.lock') }}
@@ -78,7 +79,7 @@ jobs:
 
       # Another solution creating build by running on simulator instead of using command
       # - name: Run app on iOS
-      #   run: npx react-native run-ios --simulator 'iPhone 15 Pro Max' --configuration Release
+      #   run: npx react-native run-ios --simulator 'iPhone 17 Pro Max' --configuration Release
 
       # - name: Store build .app file as zip
       #   working-directory: ios
@@ -88,7 +89,7 @@ jobs:
       #     zip -r -y -o output/app_scheme.zip app_scheme.app
 
       # - name: Save build file as artifact
-      #   uses: actions/upload-artifact@v4
+      #   uses: actions/upload-artifact@v7
       #   with:
       #     name: rn-build-ios-simulator
       #     path: ~/Library/Developer/Xcode/DerivedData/app_scheme-*/Build/Products/Release-iphonesimulator/output
@@ -123,7 +124,7 @@ jobs:
           zip -r -y -o output/app_scheme.zip app_scheme.app
 
       - name: Save build file as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: rn-build-ios-simulator
           path: ios/build/Build/Products/Release-iphonesimulator/output
