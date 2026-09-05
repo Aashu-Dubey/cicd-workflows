@@ -1,4 +1,6 @@
 # This workflow build and publishes an npm package to NPM registry
+# NPM now recommendeds to use Trusted Publishers (https://docs.npmjs.com/trusted-publishers)
+# this workflow is configured to that approach, while old npm token approach is commented out for reference. 
 
 name: Publish Package - NPM registry
 
@@ -7,21 +9,33 @@ on:
     types: [published]
   workflow_dispatch:
 
+# # or
+# on:
+#   push:
+#     tags:
+#       - 'v*'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   publish-npmjs:
     name: Publish package to npmjs
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Setup .npmrc file to publish to npm
       - name: Setup Web environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
-          cache: "yarn" # or 'npm'
+          # never use caching in release builds
+          # ref: https://docs.npmjs.com/trusted-publishers#step-2-configure-your-cicd-workflow
+          package-manager-cache: false  
 
       - name: Install packages
         run: yarn install --immutable # or 'npm ci'
@@ -29,9 +43,12 @@ jobs:
       - name: Build the plugin
         run: yarn build # or 'npm run build'
 
-      # Need to add npm access token as secret in the repo, named 'NPM_TOKEN' in this case
-      # optional `--provenance` adds provenance statements, to publicly establish where a package was built and who published a package.
       - name: Publish Package
-        run: npm publish --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
+        # # Using NPM token:
+        # # optional `--provenance` adds provenance statements, to publicly establish where a package was built and who published a package.
+        # # When publishing using trusted publishers, npm automatically generates and publishes provenance attestations for the package.
+        # # Need to add npm access token as secret in the repo, named 'NPM_TOKEN' in this case
+        # run: npm publish --provenance
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

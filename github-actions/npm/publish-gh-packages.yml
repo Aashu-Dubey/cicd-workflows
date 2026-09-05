@@ -8,24 +8,33 @@ on:
     types: [published]
   workflow_dispatch:
 
+# # or
+# on:
+#   push:
+#     tags:
+#       - 'v*'
+
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   publish-gh-packages:
     name: Publish package to GitHub Packages
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Setup .npmrc file to publish to GitHub Packages
       - name: Setup Web environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
           registry-url: 'https://npm.pkg.github.com'
-          cache: 'yarn' # or 'npm'
+          # never use caching in release builds
+          # ref: https://docs.npmjs.com/trusted-publishers#step-2-configure-your-cicd-workflow
+          package-manager-cache: false
 
       - name: Install packages
         run: yarn install --immutable # or 'npm ci'
